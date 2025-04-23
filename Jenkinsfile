@@ -1,6 +1,8 @@
 pipeline {
     agent any
-    
+     parameters {
+        string(name: 'GIT_COMMIT', defaultValue: '', description: 'Git commit to build')
+    }
     environment {
         GITHUB_REPO = "YOUR_USERNAME/devops-assistant"
         FAILED_FILE = "main.py"  // The buggy file
