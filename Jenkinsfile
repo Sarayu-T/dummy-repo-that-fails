@@ -4,14 +4,14 @@ pipeline {
         string(name: 'GIT_COMMIT', defaultValue: '', description: 'Git commit to build')
     }
     environment {
-        GITHUB_REPO = "YOUR_USERNAME/devops-assistant"
+        GITHUB_REPO = "Sarayu-T/devops-assistant"
         FAILED_FILE = "main.py"  // The buggy file
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                git url: "https://github.com/${GITHUB_REPO}.git", branch: 'main'
+                git url: "https://github.com/Sarayu-T/dummy-repo-that-fails.git", branch: 'main'
             }
         }
 
