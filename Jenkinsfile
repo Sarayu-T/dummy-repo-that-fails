@@ -20,11 +20,16 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
+                    echo "🔍 Attempting to run tests..."
+
                     def result = sh(script: "python3 src/main.py", returnStatus: true)
+                    echo "🔁 Exit code: ${result}"
+
                     if (result != 0) {
-                        echo "❌ Test failed with exit code ${result}!"
-                        currentBuild.result = 'FAILURE'
-                        error("Tests failed. Halting pipeline.")
+                        echo "❌ Test failed!"
+                        error("Tests failed. Exiting pipeline.")
+                    } else {
+                        echo "✅ Test passed!"
                     }
                 }
             }
@@ -35,10 +40,8 @@ pipeline {
                 expression { currentBuild.result == 'FAILURE' }
             }
             steps {
-                script {
-                    echo "⚠️ Sending email notifications to developers..."
-                    // Add your email logic or webhook here
-                }
+                echo "⚠️ Sending email notifications to developers..."
+                // Your email notification logic here
             }
         }
     }
