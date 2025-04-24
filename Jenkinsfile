@@ -22,7 +22,8 @@ pipeline {
                 script {
                     echo "🔍 Attempting to run tests..."
 
-                    def result = sh(script: "python3 src/main.py", returnStatus: true)
+                    // Using 'bat' instead of 'sh' for Windows
+                    def result = bat(script: "python src\\main.py", returnStatus: true)
                     echo "🔁 Exit code: ${result}"
 
                     if (result != 0) {
