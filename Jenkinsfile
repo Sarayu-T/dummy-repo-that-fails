@@ -13,7 +13,21 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git url: "https://github.com/Sarayu-T/dummy-repo-that-fails.git", branch: 'main'
+                script {
+                    def repoUrl = "https://github.com/Sarayu-T/dummy-repo-that-fails.git"
+                    def commit = params.GIT_COMMIT?.trim()
+                    
+                    if (commit) {
+                        echo "📌 Cloning specific commit: ${commit}"
+                        checkout([$class: 'GitSCM',
+                            branches: [[name: commit]],
+                            userRemoteConfigs: [[url: repoUrl]]
+                        ])
+                    } else {
+                        echo "🔄 No commit specified, checking out 'main'"
+                        git url: repoUrl, branch: 'main'
+                    }
+                }
             }
         }
 
@@ -22,8 +36,11 @@ pipeline {
                 script {
                     echo "🔍 Attempting to run tests..."
 
-                    // Using 'bat' instead of 'sh' for Windows
-                    def result = bat(script: "C:\\Users\\saray\\AppData\\Local\\Programs\\Python\\Python39\\python.exe src\\main.py", returnStatus: true)
+                    def result = bat(
+                        script: "C:\\Users\\saray\\AppData\\Local\\Programs\\Python\\Python39\\python.exe src\\main.py",
+                        returnStatus: true
+                    )
+
                     echo "🔁 Exit code: ${result}"
 
                     if (result != 0) {
@@ -42,7 +59,7 @@ pipeline {
             }
             steps {
                 echo "⚠️ Sending email notifications to developers..."
-                // Your email notification logic here
+                // Add notification logic here
             }
         }
     }
