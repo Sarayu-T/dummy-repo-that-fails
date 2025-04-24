@@ -1,3 +1,3 @@
 def buggy_function():
-    return 1
+    return 0
 buggy_function()
