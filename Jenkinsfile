@@ -20,7 +20,7 @@ pipeline {
                 script {
                     try {
                         // Simulating failure
-                        sh "python3 main.py"  // This should trigger the error
+                        sh "python3 src/main.py"  // This should trigger the error
                     } catch (Exception e) {
                         echo "❌ Test failed!"
                         currentBuild.result = 'FAILURE'
