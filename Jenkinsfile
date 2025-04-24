@@ -1,8 +1,10 @@
 pipeline {
     agent any
-     parameters {
+
+    parameters {
         string(name: 'GIT_COMMIT', defaultValue: '', description: 'Git commit to build')
     }
+
     environment {
         GITHUB_REPO = "Sarayu-T/devops-assistant"
         FAILED_FILE = "main.py"  // The buggy file
@@ -18,12 +20,11 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    try {
-                        // Simulating failure
-                        sh "python3 src/main.py"  // This should trigger the error
-                    } catch (Exception e) {
-                        echo "❌ Test failed!"
+                    def result = sh(script: "python3 src/main.py", returnStatus: true)
+                    if (result != 0) {
+                        echo "❌ Test failed with exit code ${result}!"
                         currentBuild.result = 'FAILURE'
+                        error("Tests failed. Halting pipeline.")
                     }
                 }
             }
@@ -36,8 +37,7 @@ pipeline {
             steps {
                 script {
                     echo "⚠️ Sending email notifications to developers..."
-                    // You can trigger your email sending or dev-notification logic here
-                    // E.g., run a Python script or use the Jenkins email plugin
+                    // Add your email logic or webhook here
                 }
             }
         }
