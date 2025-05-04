@@ -63,7 +63,7 @@ pipeline {
                 curl -X POST ^
                 -H "Content-Type: application/json" ^
                 -d "${jsonPayload}" ^
-                https://8f20-223-185-130-123.ngrok-free.app/webhook/trigger
+                https://8f20-223-185-130-123.ngrok-free.app/webhook/jenkins
             """
             }
         }
