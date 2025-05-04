@@ -58,7 +58,7 @@ pipeline {
     post {
     failure {
         script {
-            def jsonPayload = '{"build_number":"24","failed_file":"main.py","repo":"Sarayu-T/devops-assistant","commit":""}'
+            def jsonPayload = '{\"build_number\":\"${currentBuild.number}\",\"failed_file\":\"main.py\",\"repo\":\"Sarayu-T/devops-assistant\",\"commit\":\"\"}'
             bat """
                 curl -X POST ^
                 -H "Content-Type: application/json" ^
