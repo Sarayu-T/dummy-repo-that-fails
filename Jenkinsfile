@@ -7,7 +7,8 @@ pipeline {
 
     environment {
         GITHUB_REPO = "Sarayu-T/devops-assistant"
-        FAILED_FILE = "main.py"  // The buggy file
+        FAILED_FILE = "main.py"  // Adjust if needed
+        FLASK_TRIGGER_URL = "http://localhost:5000/webhook/jenkins"  // 🔁 Replace this
     }
 
     stages {
@@ -52,21 +53,25 @@ pipeline {
                 }
             }
         }
-
-        stage('Notify Developers') {
-            when {
-                expression { currentBuild.result == 'FAILURE' }
-            }
-            steps {
-                echo "⚠️ Sending email notifications to developers..."
-                // Add notification logic here
-            }
-        }
     }
 
     post {
         failure {
-            echo "🚨 Build failed, notifying developers."
+            echo "🚨 Build failed, notifying Flask fix assistant..."
+
+            httpRequest(
+                httpMode: 'POST',
+                url: "${env.FLASK_TRIGGER_URL}",
+                contentType: 'APPLICATION_JSON',
+                requestBody: """
+                {
+                    "build_number": "${env.BUILD_NUMBER}",
+                    "failed_file": "${env.FAILED_FILE}",
+                    "repo": "${env.GITHUB_REPO}",
+                    "commit": "${params.GIT_COMMIT}"
+                }
+                """
+            )
         }
     }
 }
