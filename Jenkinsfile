@@ -56,22 +56,19 @@ pipeline {
     }
 
     post {
-        failure {
-            echo "🚨 Build failed, notifying Flask fix assistant..."
-
-            httpRequest(
-                httpMode: 'POST',
-                url: "${env.FLASK_TRIGGER_URL}",
-                contentType: 'APPLICATION_JSON',
-                requestBody: """
-                {
-                    "build_number": "${env.BUILD_NUMBER}",
-                    "failed_file": "${env.FAILED_FILE}",
-                    "repo": "${env.GITHUB_REPO}",
-                    "commit": "${params.GIT_COMMIT}"
-                }
-                """
-            )
+    failure {
+        script {
+            def payload = """{
+                "build_number": "${env.BUILD_NUMBER}",
+                "failed_file": "main.py",
+                "repo": "Sarayu-T/devops-assistant",
+                "commit": "${params.GIT_COMMIT}"
+            }"""
+            
+            bat """
+                curl -X POST -H "Content-Type: application/json" -d '${payload}' https://8f20-223-185-130-123.ngrok-free.app/webhook/trigger
+            """
+            }
         }
     }
 }
