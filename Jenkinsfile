@@ -55,16 +55,10 @@ pipeline {
         }
     }
 
-    post {
+   post {
     failure {
         script {
-            def jsonPayload = '{\"build_number\":\"${currentBuild.number}\",\"failed_file\":\"main.py\",\"repo\":\"Sarayu-T/devops-assistant\",\"commit\":\"\"}'
-            bat """
-                curl -X POST ^
-                -H "Content-Type: application/json" ^
-                -d "${jsonPayload}" ^
-                https://8f20-223-185-130-123.ngrok-free.app/webhook/jenkins
-            """
+            bat 'curl -X POST https://8f20-223-185-130-123.ngrok-free.app/webhook/jenkins'
             }
         }
     }
