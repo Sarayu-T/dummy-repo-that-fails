@@ -58,15 +58,12 @@ pipeline {
     post {
     failure {
         script {
-            def payload = """{
-                "build_number": "${env.BUILD_NUMBER}",
-                "failed_file": "main.py",
-                "repo": "Sarayu-T/devops-assistant",
-                "commit": "${params.GIT_COMMIT}"
-            }"""
-            
+            def jsonPayload = '{"build_number":"24","failed_file":"main.py","repo":"Sarayu-T/devops-assistant","commit":""}'
             bat """
-                curl -X POST -H "Content-Type: application/json" -d '${payload}' https://8f20-223-185-130-123.ngrok-free.app/webhook/trigger
+                curl -X POST ^
+                -H "Content-Type: application/json" ^
+                -d "${jsonPayload}" ^
+                https://8f20-223-185-130-123.ngrok-free.app/webhook/trigger
             """
             }
         }
