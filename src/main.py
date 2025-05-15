@@ -1,8 +1,3 @@
-def buggy_function(denominator=1):
-    try:
-        result = 1 / denominator
-    except ZeroDivisionError:
-        result = 0
-    return result
-
+def buggy_function():
+    return 1/0
 buggy_function()
